@@ -42,7 +42,7 @@ for sid in sample_ids:
 
         u, v = utils.get_diameter_nodes(data)
 
-        effres = utils.effective_resistance(data.edge_index, data.x.size(0))
+        effres, _ = utils.effective_resistance(data.edge_index, data.x.size(0))
         ct_mat = utils.get_commute_time(effres, data.edge_index.size(1) // 2)
 
         ct = ct_mat[u][v]
