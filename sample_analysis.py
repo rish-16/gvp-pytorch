@@ -23,7 +23,9 @@ def wire_edge(coords, radius):
     return torch_cluster.radius_graph(coords, r=radius)
 
 radii = [i + 2.5 for i in range(2, 29, 2)]
-sample_ids = torch.randint(len(trainset), size=(6,)).view(-1).numpy().tolist()
+N_graphs = 6
+sample_ids = torch.randint(len(trainset), size=(N_graphs,)).view(-1).numpy().tolist()
+print (sample_ids)
 all_commute_times = []
 n_atoms = []
 
@@ -46,7 +48,8 @@ for sid in sample_ids:
         commute_times.append(ct)
     all_commute_times.append(commute_times)
 
-for i in range(len(sample_ids)):
+for i in range(N_graphs):
+    assert len(radii) == len(all_commute_times[i])
     plt.plot(radii, all_commute_times[i], label=f"id: {sample_ids[i]} | N: {n_atoms[i]}")
 plt.legend()
 plt.grid()
