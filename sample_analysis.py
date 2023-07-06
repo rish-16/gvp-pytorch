@@ -12,6 +12,6 @@ train_loader = pyg.loader.DataLoader(trainset, batch_size=5, shuffle=False)
 val_loader = pyg.loader.DataLoader(valset, batch_size=5, shuffle=False)
 test_loader = pyg.loader.DataLoader(testset, batch_size=5, shuffle=False)
 
-for batch in dataloader:
+for i, batch in enumerate(train_loader):
     print (batch)
     break
