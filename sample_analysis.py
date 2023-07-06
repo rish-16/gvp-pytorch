@@ -49,7 +49,7 @@ for sid in sample_ids:
         commute_times.append(ct)
     all_commute_times.append(commute_times)
 
-pprint (all_commute_times)    
+print(np.array(all_commute_times).shape)
 
 for i in range(N_graphs):
     assert len(radii) == len(all_commute_times[i])
