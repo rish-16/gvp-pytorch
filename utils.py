@@ -12,9 +12,8 @@ import networkx as nx
 
 def effective_resistance(edge_index, n_nodes):
     adj = tg.utils.to_dense_adj(edge_index, max_num_nodes=n_nodes)
-    print (adj.shape)
     adj = adj.squeeze(0).view(n_nodes, n_nodes).numpy()
-    degree = tg.utils.degree(edge_index[0])
+    degree = tg.utils.degree(edge_index[0], num_nodes=n_nodes)
     degree = np.diag(degree.numpy())
     L = degree - adj
     n_ones = np.ones(shape=(n_nodes, n_nodes))
