@@ -1,6 +1,7 @@
 from gvp.data import CATHDataset, ProteinGraphDataset, BatchSampler
 import torch
 import torch.nn as nn
+import numpy as np
 import torch_geometric as pyg
 import torch_cluster
 import matplotlib.pyplot as plt
