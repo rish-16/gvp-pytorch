@@ -5,6 +5,7 @@ import torch_geometric as pyg
 import torch_cluster
 import matplotlib.pyplot as plt
 import utils
+from pprint import pprint
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
 
@@ -39,14 +40,16 @@ for sid in sample_ids:
         new_edge_index = pyg.utils.to_undirected(new_edge_index)
         data.edge_index = new_edge_index
 
-        i, j = utils.get_diameter_nodes(data)
+        u, v = utils.get_diameter_nodes(data)
 
         effres = utils.effective_resistance(data.edge_index, data.x.size(0))
         ct_mat = utils.get_commute_time(effres, data.edge_index.size(1) // 2)
 
-        ct = ct_mat[i][j]
+        ct = ct_mat[u][v]
         commute_times.append(ct)
     all_commute_times.append(commute_times)
+
+pprint (all_commute_times)    
 
 for i in range(N_graphs):
     assert len(radii) == len(all_commute_times[i])
