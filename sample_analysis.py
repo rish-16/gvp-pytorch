@@ -36,7 +36,6 @@ for sid in sample_ids:
     commute_times = []
     n_atoms.append(data.x.size(0))
     for r in radii:
-        print (sid, r)
         new_edge_index = wire_edge(data.x, r)
         new_edge_index = pyg.utils.to_undirected(new_edge_index)
         data.edge_index = new_edge_index
@@ -47,7 +46,8 @@ for sid in sample_ids:
         ct_mat = utils.get_commute_time(effres, data.edge_index.size(1) // 2)
 
         ct = ct_mat[u][v]
-        commute_times.append(ct)
+        print (sid, r, ct)
+        commute_times.append(ct.item())
     all_commute_times.append(commute_times)
 
 print(np.array(all_commute_times).shape)
