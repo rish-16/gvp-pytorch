@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 import networkx as nx
 
 def effective_resistance(edge_index, n_nodes):
-    adj = tg.utils.to_dense_adj(edge_index)
+    adj = tg.utils.to_dense_adj(edge_index, max_num_nodes=n_nodes)
     print (adj.shape)
     adj = adj.squeeze(0).view(n_nodes, n_nodes).numpy()
     degree = tg.utils.degree(edge_index[0])
