@@ -135,9 +135,7 @@ class ProteinGraphDataset(data.Dataset):
     :param top_k: number of edges to draw per node (as destination node)
     :param device: if "cuda", will do preprocessing on the GPU
     '''
-    def __init__(self, data_list, 
-                 num_positional_embeddings=16,
-                 top_k=30, num_rbf=16, device="cpu"):
+    def __init__(self, data_list, num_positional_embeddings=16, top_k=30, num_rbf=16, device="cpu", transform=None):
         
         super(ProteinGraphDataset, self).__init__()
         
@@ -147,6 +145,7 @@ class ProteinGraphDataset(data.Dataset):
         self.num_positional_embeddings = num_positional_embeddings
         self.device = device
         self.node_counts = [len(e['seq']) for e in data_list]
+        self._transform = transform
         
         self.letter_to_num = {'C': 4, 'D': 3, 'S': 15, 'Q': 5, 'K': 11, 'I': 9,
                        'P': 14, 'T': 16, 'F': 13, 'A': 0, 'G': 7, 'H': 8,
@@ -161,10 +160,8 @@ class ProteinGraphDataset(data.Dataset):
     def _featurize_as_graph(self, protein):
         name = protein['name']
         with torch.no_grad():
-            coords = torch.as_tensor(protein['coords'], 
-                                     device=self.device, dtype=torch.float32)   
-            seq = torch.as_tensor([self.letter_to_num[a] for a in protein['seq']],
-                                  device=self.device, dtype=torch.long)
+            coords = torch.as_tensor(protein['coords'], device=self.device, dtype=torch.float32)   
+            seq = torch.as_tensor([self.letter_to_num[a] for a in protein['seq']], device=self.device, dtype=torch.long)
             
             mask = torch.isfinite(coords.sum(dim=(1,2)))
             coords[~mask] = np.inf
@@ -188,10 +185,20 @@ class ProteinGraphDataset(data.Dataset):
             node_s, node_v, edge_s, edge_v = map(torch.nan_to_num,
                     (node_s, node_v, edge_s, edge_v))
             
-        data = torch_geometric.data.Data(x=X_ca, seq=seq, name=name,
-                                         node_s=node_s, node_v=node_v,
-                                         edge_s=edge_s, edge_v=edge_v,
-                                         edge_index=edge_index, mask=mask)
+        data = torch_geometric.data.Data(
+                            x=X_ca, 
+                            seq=seq, 
+                            name=name,
+                            node_s=node_s,
+                            # node_v=node_v,
+                            # edge_s=edge_s, 
+                            # edge_v=edge_v,
+                            edge_index=edge_index, 
+                            mask=mask
+                        )
+
+        if self._transform:
+            data = self._transform(data)
         return data
                                 
     def _dihedrals(self, X, eps=1e-7):
