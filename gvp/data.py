@@ -46,8 +46,7 @@ class CATHDataset:
     def __init__(self, path, splits_path):
         with open(splits_path) as f:
             dataset_splits = json.load(f)
-        train_list, val_list, test_list = dataset_splits['train'], \
-            dataset_splits['validation'], dataset_splits['test']
+        train_list, val_list, test_list = dataset_splits['train'], dataset_splits['validation'], dataset_splits['test']
         
         self.train, self.val, self.test = [], [], []
         
