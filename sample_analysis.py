@@ -32,8 +32,8 @@ for sid in sample_ids:
     commute_times = []
     n_atoms.append(data.x.size(0))
     for r in radii:
+        print (sid, r)
         new_edge_index = wire_edge(data.x, r)
-        print (new_edge_index.shape, data.x.size(0))
         new_edge_index = pyg.utils.to_undirected(new_edge_index)
         data.edge_index = new_edge_index
 
